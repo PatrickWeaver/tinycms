@@ -1,4 +1,5 @@
-var url = "https://tinycrm.glitch.me/";
+var url = window.location.protocol + "//" + window.location.hostname;
+
 var indexFields = [
   "Nickname",
   "First Name",
