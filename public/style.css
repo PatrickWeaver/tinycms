@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+img {
+  width: 250px;
+  display: block;
+}
+
 ul {
   padding: 0;
 }
