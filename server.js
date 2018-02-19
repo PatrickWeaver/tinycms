@@ -1,6 +1,9 @@
 var express = require("express");
 var app = express();
 var GoogleSpreadsheets = require("google-spreadsheets");
+const hbs = require("hbs");
+app.set("view engine", "hbs");
+app.set("views", __dirname + "/views");
 
 // Data is 1 indexed so start array with placeholder to fill 0 index.
 var fields = ["Structure:"];
@@ -20,19 +23,26 @@ var data = false;
 // range, R1C1:R21C10, or Row 1, Column 1 to Row 21, Column 13 with the function `spreadsheet.worksheets[0].cells()`. In the [example spreadsheet](https://docs.google.com/spreadsheets/d/1wz29qFmSVUoUpcxZzwPgyamrfXTjN8cnqydPW8N6XAg/edit?usp=sharing), that's the whole area populated with data
 //
 
-var data = false;
-GoogleSpreadsheets({
-  key: process.env.KEY
-}, function(err, spreadsheet) {
-  spreadsheet.worksheets[0].cells({
-      // grab all the data
-      range: "R1C1:R21C13"
-  }, function(err, result) {
-    // Put in-memory store for now
-    data = result.cells;
-    parseStructure(data["1"]);
+function loadData() {
+  return new Promise(function(resolve, reject) {
+    GoogleSpreadsheets({
+      key: process.env.KEY
+    }, function(err, spreadsheet) {
+      spreadsheet.worksheets[0].cells({
+          // grab all the data
+          range: "R1C1:R21C13"
+      }, function(err, result) {
+        if (!err){
+          // Put in-memory store for now
+          data = result.cells;
+          resolve(data);
+        } else {
+          reject("Error: " + err);
+        }
+      });
+    });
   });
-});
+}
 
 function parseStructure(structure) {
   for (var i in structure) {
@@ -52,20 +62,26 @@ function makeContact(contactData) {
 }
 
 
-
 app.use(express.static('public'));
 
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/views/index.html");
+  res.render("index");
 });
 
 app.get("/json", function(req, res) {
-  var end = Object.keys(data).length;
-  var contacts = [];
-  for (var i = 1; i <= end; i ++) {
-    contacts.push(makeContact(data[String(i)]));
-  }
-  res.send(JSON.stringify(contacts));
+  loadData()
+  .then(function(result) {
+    parseStructure(data["1"]);
+    var end = Object.keys(data).length;
+    var contacts = [];
+    for (var i = 1; i <= end; i ++) {
+      contacts.push(makeContact(data[String(i)]));
+    }
+    res.send(JSON.stringify(contacts));
+  })
+  .catch(function(err) {
+    res.send("Error");
+  }); 
 });
 
 app.get("/data", function (req, res) {
@@ -73,11 +89,11 @@ app.get("/data", function (req, res) {
 });
 
 app.get("/contact/:id", function(req, res) {
-  res.sendFile(__dirname + "/views/contact.html");
+  res.render("contact");
 });
 
 app.get("/new", function(req, res) {
- res.sendFile(__dirname + "/views/new-contact.html"); 
+ res.render("new-contact"); 
 });
 
 // listen for requests :)
