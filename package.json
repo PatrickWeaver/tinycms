@@ -1,7 +1,7 @@
 {
-  "name": "tinycms",
-  "version": "0.0.1",
-  "description": "A Tiny CMS",
+  "name": "tinycrm",
+  "version": "0.0.2",
+  "description": "A Tiny CRM",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

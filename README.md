@@ -1,3 +1,3 @@
-# tinycms
+# tinycrm
 
-A tiny cms
+A tiny crm
