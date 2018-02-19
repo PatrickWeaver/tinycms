@@ -1,4 +1,4 @@
-var url = "https://tinycms.glitch.me";
+var url = "https://tinycrm.glitch.me/";
 var indexFields = [
   "Nickname",
   "First Name",
@@ -88,5 +88,4 @@ $('document').ready(function(){
     var index = pathArray[pathArray.length - 1];
     getContacts(index);
   }
-  
 });
