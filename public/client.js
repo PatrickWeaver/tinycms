@@ -62,11 +62,33 @@ $('document').ready(function(){
   
   function addIndexRow(rowData, index) {
     var htmlString = "";
-    for (var i in rowData) {
-      if (indexFields.includes(i)) {
-        htmlString += "<th>" + rowData[i] + "</th>";
-      }
+    var tag;
+    if (index) {
+      tag = "td";
+    } else {
+      tag = "th";
     }
+    for (var i in indexFields) {
+      if (rowData[indexFields[i]]) {
+        htmlString += "<" + tag + ">" + rowData[indexFields[i]] + "</" + tag + ">";
+      } else {
+        htmlString += "<" + tag + "></" + tag + ">";
+      }
+      
+    }
+    
+    /*
+    for (var i in rowData) {
+      var indexCount = indexFields.indexOf(i);
+      var rowCount = 0;
+      var tag;
+
+      if (indexFields.includes(i)) {
+        htmlString += "<" + tag + ">" + rowData[i] + "</" + tag + "><!--" + i + "-->";
+      }
+      
+    }
+    */
     return htmlString;
   }
   
