@@ -76,19 +76,6 @@ $('document').ready(function(){
       }
       
     }
-    
-    /*
-    for (var i in rowData) {
-      var indexCount = indexFields.indexOf(i);
-      var rowCount = 0;
-      var tag;
-
-      if (indexFields.includes(i)) {
-        htmlString += "<" + tag + ">" + rowData[i] + "</" + tag + "><!--" + i + "-->";
-      }
-      
-    }
-    */
     return htmlString;
   }
   
